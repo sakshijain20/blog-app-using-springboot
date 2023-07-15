@@ -18,7 +18,6 @@ import com.springboot.blogapp.security.jwt.AuthEntryPoint;
 import com.springboot.blogapp.security.jwt.AuthTokenFilter;
 import com.springboot.blogapp.security.services.UserDetailsServiceImpl;
 
-import jakarta.servlet.Filter;
 
 @Configuration
 //@EnableWebSecurity
@@ -60,18 +59,16 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 		
 		@Bean
 		public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		  http.csrf(csrf -> csrf.disable())
-		      .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-		      .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-		      .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/test/**")
-		          .permitAll().anyRequest().authenticated());
-		
-		  http.authenticationProvider(authenticationProvider());
-		  //Class<? extends Filter> filterClass = UsernamePasswordAuthenticationFilter.class;
-		
-		  //http.addFilterBefore(authenticationJwtTokenFilter(), filterClass);
-		  http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-		
-		  return http.build();
+			http.csrf(csrf -> csrf.disable())
+	        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+	        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	        .authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/test/**")
+	            .permitAll().anyRequest().authenticated());
+
+	    http.authenticationProvider(authenticationProvider());
+
+	    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
+	    return http.build();
 		}
 }
